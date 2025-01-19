@@ -9,16 +9,16 @@ class OnBoardModel {
  static List<OnBoardModel> contentList = [
     OnBoardModel(
         title: 'Select from Our\n      Best Menu',
-        imageUrl: 'https://static.vecteezy.com/system/resources/thumbnails/006/800/452/small/order-on-hold-illustration-exclusive-design-inspiration-vector.jpg',
+        imageUrl: 'images/screen1.png',
         description: 'Pick your food our menu\n         More than 35 times.'),
     OnBoardModel(
         title: 'Easy and Online Payment',
-        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYFDGrdupyKNoBYOf8pfOj1U7sleZw8N3PZuq76nsPBZUmgsAxDzuTu4TFmBX8dFhWabs&usqp=CAU',
+        imageUrl: 'images/screen2.png',
         description:
             'You can pay case on delivery and\n   Card payment is available'),
     OnBoardModel(
         title: '  Quick Delivery at\n      Your Doorstep',
-        imageUrl: 'https://static.vecteezy.com/system/resources/previews/002/072/442/non_2x/man-delivered-goods-to-woman-through-mobile-smartphone-free-vector.jpg',
+        imageUrl: 'images/screen3.png',
         description: 'Delivery your food at your\n                     Doorstep'),
   ];
 }

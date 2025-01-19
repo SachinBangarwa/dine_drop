@@ -1,17 +1,17 @@
-import 'package:dine_drop/controllers/sign_up_controller.dart';
-import 'package:dine_drop/pages/auth/log_in_page.dart';
+import 'package:dine_drop/auth/forgot_password_page.dart';
+import 'package:dine_drop/auth/sign_up_page.dart';
+import 'package:dine_drop/controllers/log_in_controller.dart';
 import 'package:dine_drop/pages/dashboard_page.dart';
 import 'package:dine_drop/pages/widget/support_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SignUpPage extends StatelessWidget {
-  SignUpPage({super.key});
+class LogInPage extends StatelessWidget {
+  LogInPage({super.key});
 
-  final _signUpController = Get.put(SignUpController());
+  final _loginController = Get.put(LogInController());
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _nameController = TextEditingController();
   final _fromKey = GlobalKey<FormState>();
 
   @override
@@ -24,16 +24,15 @@ class SignUpPage extends StatelessWidget {
               alignment: Alignment.topCenter,
               width: double.infinity,
               height: Get.height / 2.5,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFFff5c30),
-                      Color(0xFFe74b1a),
-                    ]),
-              ),
-              child:Padding(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                    Color(0xFFff5c30),
+                    Color(0xFFe74b1a),
+                  ])),
+              child: Padding(
                 padding: const EdgeInsets.all(45.0),
                 child: Image.asset('images/logo.png'),
               ),
@@ -42,7 +41,7 @@ class SignUpPage extends StatelessWidget {
               margin: EdgeInsets.only(top: Get.height / 2.8),
               width: double.infinity,
               height: Get.height / 1.6,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                       topRight: Radius.circular(30),
@@ -51,7 +50,7 @@ class SignUpPage extends StatelessWidget {
                 padding: EdgeInsets.only(top: Get.height / 2),
                 child: InkWell(
                   onTap: () {
-                    Get.to(() => LogInPage());
+                    Get.to(() => SignUpPage());
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +60,7 @@ class SignUpPage extends StatelessWidget {
                         style: AppSupportWidget.mediumTextStyle(),
                       ),
                       Text(
-                        " Log In",
+                        " Sign Up",
                         style: AppSupportWidget.mediumTextStyle(),
                       ),
                     ],
@@ -88,30 +87,11 @@ class SignUpPage extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        'Sign Up',
+                        'Login',
                         style: AppSupportWidget.boldTextStyle(),
                       ),
                       SizedBox(
-                        height: Get.height / 60,
-                      ),
-                      TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter the Name';
-                          }
-                          return null;
-                        },
-                        style: AppSupportWidget.mediumTextStyle(),
-                        keyboardType: TextInputType.text,
-                        controller: _nameController,
-                        decoration: InputDecoration(
-                          hintStyle: AppSupportWidget.mediumTextStyle(),
-                          hintText: 'Name',
-                          prefixIcon: Icon(Icons.person),
-                        ),
-                      ),
-                      SizedBox(
-                        height: Get.height / 60,
+                        height: Get.height / 30,
                       ),
                       TextFormField(
                         validator: (value) {
@@ -120,17 +100,17 @@ class SignUpPage extends StatelessWidget {
                           }
                           return null;
                         },
+                        keyboardType: TextInputType.emailAddress,
                         style: AppSupportWidget.mediumTextStyle(),
-                        keyboardType: TextInputType.name,
                         controller: _emailController,
                         decoration: InputDecoration(
                           hintStyle: AppSupportWidget.mediumTextStyle(),
                           hintText: 'Email',
-                          prefixIcon: Icon(Icons.email_outlined),
+                          prefixIcon: const Icon(Icons.email_outlined),
                         ),
                       ),
                       SizedBox(
-                        height: Get.height / 60,
+                        height: Get.height / 30,
                       ),
                       Obx(() => TextFormField(
                             validator: (value) {
@@ -142,21 +122,36 @@ class SignUpPage extends StatelessWidget {
                             style: AppSupportWidget.mediumTextStyle(),
                             controller: _passwordController,
                             keyboardType: TextInputType.visiblePassword,
-                            obscureText: _signUpController.visible.value,
+                            obscureText: _loginController.visible.value,
                             decoration: InputDecoration(
                                 hintStyle: AppSupportWidget.mediumTextStyle(),
                                 hintText: 'Password',
-                                prefixIcon: Icon(Icons.password_outlined),
+                                prefixIcon: const Icon(Icons.password_outlined),
                                 suffixIcon: InkWell(
                                   splashColor: Colors.blueGrey,
-                                  child: Icon(_signUpController.visible.value
+                                  child: Icon(_loginController.visible.value
                                       ? Icons.remove_red_eye
                                       : Icons.visibility_off),
                                   onTap: () {
-                                    _signUpController.visible.toggle();
+                                    _loginController.visible.toggle();
                                   },
                                 )),
                           )),
+                      SizedBox(
+                        height: Get.height / 40,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => ForgotPasswordPage());
+                        },
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            'Forget Password?',
+                            style: AppSupportWidget.mediumTextStyle(),
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         height: Get.height / 30,
                       ),
@@ -167,7 +162,7 @@ class SignUpPage extends StatelessWidget {
                                   horizontal: Get.width / 8,
                                   vertical: Get.height / 85)),
                           onPressed: () async {
-                            if (_fromKey.currentState?.validate() ?? false) {
+                            if (_fromKey.currentState!.validate()) {
                               await _onPressHandlerLogin();
                             }
                           },
@@ -188,12 +183,12 @@ class SignUpPage extends StatelessWidget {
   }
 
   Future _onPressHandlerLogin() async {
-    await _signUpController
-        .signUpController(
+    await _loginController
+        .loginController(
             _emailController.text.trim(), _passwordController.text.trim())
         .then((value) {
       if (value != null) {
-        Get.offAll(() => DashboardPage());
+        Get.offAll(() => const DashboardPage());
       }
     });
   }

@@ -1,6 +1,6 @@
-import 'package:dine_drop/pages/auth/sign_up_page.dart';
+import 'package:dine_drop/auth/log_in_page.dart';
+import 'package:dine_drop/pages/widget/on_board_message.dart';
 import 'package:dine_drop/pages/widget/on_board_model.dart';
-import 'package:dine_drop/pages/widget/support_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,15 +12,16 @@ class OnBoardPage extends StatefulWidget {
 }
 
 class _OnBoardPageState extends State<OnBoardPage> {
- late PageController pageController;
+  late PageController pageController;
   int currentIndex = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-   pageController= PageController(initialPage: 0);
+    pageController = PageController(initialPage: 0);
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -31,6 +32,7 @@ class _OnBoardPageState extends State<OnBoardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Expanded(
@@ -43,36 +45,8 @@ class _OnBoardPageState extends State<OnBoardPage> {
                 },
                 itemBuilder: (context, index) {
                   OnBoardModel content = OnBoardModel.contentList[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.network(
-                          content.imageUrl,
-                          height: 400,width: 400,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(
-                          height: Get.height / 30,
-                        ),
-                        Text(
-                          content.title,
-                          style: AppSupportWidget.boldTextStyle(),
-                        ),
-                        SizedBox(
-                          height: Get.height / 30,
-                        ),
-                        Text(
-                          content.description,
-                          style: AppSupportWidget.lightBoldTextStyle(),
-                        ),
-                        SizedBox(
-                          height: Get.height / 20,
-                        ),
-                      ],
-                    ),
+                  return OnBoardMessage(
+                    content: content,
                   );
                 }),
           ),
@@ -92,8 +66,8 @@ class _OnBoardPageState extends State<OnBoardPage> {
                     padding: EdgeInsets.symmetric(
                       horizontal:
                           currentIndex == OnBoardModel.contentList.length - 1
-                              ? Get.width / 3.45
-                              : Get.width / 3,
+                              ? Get.width / 3.14
+                              : Get.width / 3.10,
                       vertical: Get.height / 70,
                     ),
                     backgroundColor: const Color(0xFFe74b1a),
@@ -101,17 +75,17 @@ class _OnBoardPageState extends State<OnBoardPage> {
                         borderRadius: BorderRadius.circular(10))),
                 onPressed: () {
                   if (currentIndex == OnBoardModel.contentList.length - 1) {
-                    Get.offAll(() => SignUpPage());
+                    Get.offAll(() => LogInPage());
                   }
                   pageController.nextPage(
-                      duration: (Duration(milliseconds: 100)),
+                      duration: (const Duration(milliseconds: 100)),
                       curve: Curves.bounceIn);
                 },
                 child: Text(
                   currentIndex == OnBoardModel.contentList.length - 1
-                      ? 'Sign Up'
+                      ? 'Start'
                       : 'Next',
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Poppins',
                       fontSize: 16,
@@ -125,14 +99,14 @@ class _OnBoardPageState extends State<OnBoardPage> {
 
   Container _buildContainerDot(int value) {
     return Container(
-                margin: const EdgeInsets.all(4),
-                height: 10,
-                width: currentIndex == value ? 17 : 10,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: currentIndex == value
-                        ? Colors.grey.shade600
-                        : Colors.grey.shade500),
-              );
+      margin: const EdgeInsets.all(4),
+      height: 10,
+      width: currentIndex == value ? 17 : 10,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: currentIndex == value
+              ? Colors.grey.shade600
+              : Colors.grey.shade500),
+    );
   }
 }

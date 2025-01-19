@@ -1,4 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dine_drop/pages/core/show_toast.dart';
 import 'package:dine_drop/pages/widget/support_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +18,7 @@ class DetailPage extends StatefulWidget {
   final String title;
   final String imageUrl;
   final String description;
-  final dynamic price;
+  final String price;
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -21,10 +26,19 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   int quantity = 1;
+  int total = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    total = int.parse(widget.price);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.only(top: 60, left: 18, right: 18, bottom: 5),
         child: Column(
@@ -34,9 +48,9 @@ class _DetailPageState extends State<DetailPage> {
               onTap: () {
                 Get.back();
               },
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back_ios_new,
-                size: 26,
+                size: 28,
               ),
             ),
             Expanded(
@@ -44,20 +58,25 @@ class _DetailPageState extends State<DetailPage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: Image.network(
-                      widget.imageUrl,
-                      fit: BoxFit.cover,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.imageUrl,
+                      placeholder: (context, place) =>
+                          const Center(child: CupertinoActivityIndicator()),
+                      errorWidget: (context, error, ab) =>
+                          const Icon(Icons.image_not_supported),
                     ),
                   ),
-                  SizedBox(height: Get.height / 90),
+                  SizedBox(height: Get.height / 30),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: 200,
+                        width: 180,
                         child: Text(
                           widget.title,
-                          style: AppSupportWidget.boldTextStyle(),
+                          maxLines: 4,
+                          style: const TextStyle(
+                              fontFamily: 'Poppins', fontSize: 18),
                         ),
                       ),
                       Row(
@@ -65,19 +84,19 @@ class _DetailPageState extends State<DetailPage> {
                           InkWell(
                             onTap: () {
                               setState(() {
-                                if (quantity > 1) quantity--;
+                                if (quantity > 1) {
+                                  quantity--;
+                                  total = total - int.parse(widget.price);
+                                }
                               });
                             },
                             child: Material(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
+                                  borderRadius: BorderRadius.circular(8)),
                               color: Colors.black,
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Icon(
-                                  Icons.remove_rounded,
-                                  color: Colors.white,
-                                ),
+                              child: const Icon(
+                                Icons.remove_rounded,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -91,18 +110,16 @@ class _DetailPageState extends State<DetailPage> {
                             onTap: () {
                               setState(() {
                                 quantity++;
+                                total = total + int.parse(widget.price);
                               });
                             },
                             child: Material(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
+                                  borderRadius: BorderRadius.circular(8)),
                               color: Colors.black,
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                ),
+                              child: const Icon(
+                                Icons.add,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -121,12 +138,12 @@ class _DetailPageState extends State<DetailPage> {
                   SizedBox(height: Get.height / 20),
                   Row(
                     children: [
-                      Text(
+                      const Text(
                         'Deliver Time',
-                        style: AppSupportWidget.boldTextStyle(),
+                        style: TextStyle(fontFamily: 'Poppins', fontSize: 18),
                       ),
                       SizedBox(width: Get.width / 14),
-                      Icon(Icons.alarm),
+                      const Icon(Icons.alarm),
                       SizedBox(width: Get.width / 35),
                       Text(
                         '30 min',
@@ -147,26 +164,36 @@ class _DetailPageState extends State<DetailPage> {
                       'Total Price',
                       style: AppSupportWidget.boldTextStyle(),
                     ),
-                    Text(
-                      '\$${widget.price}',
-                      style: AppSupportWidget.boldTextStyle(),
+                    SizedBox(
+                      width: Get.width / 2.5,
+                      child: Text(
+                        '\$${total.toString()}',
+                        overflow: TextOverflow.ellipsis,
+                        style: AppSupportWidget.boldTextStyle(),
+                      ),
                     ),
                   ],
                 ),
                 MaterialButton(
-                  padding: const EdgeInsets.symmetric(vertical:10,horizontal: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                   color: Colors.black,
-                  onPressed: () {},
+                  onPressed: () async {
+                    await _onPressAddToCartCloud();
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Add to card',
+                        'Add to cart',
                         style: TextStyle(
                             color: Colors.white, fontFamily: 'poppins'),
                       ),
-                      const SizedBox(width: 10,),
+                      const SizedBox(
+                        width: 10,
+                      ),
                       Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
@@ -188,5 +215,23 @@ class _DetailPageState extends State<DetailPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _onPressAddToCartCloud() async {
+    final user = FirebaseAuth.instance.currentUser;
+    Map<String, dynamic> data = {
+      'imageUrl': widget.imageUrl,
+      'itemName': widget.title,
+      'total': total,
+      'quantity': quantity,
+    };
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .collection('cart')
+        .add(data)
+        .then((onValue) {
+      showToast('Add to Cart SuccessFull');
+    });
   }
 }

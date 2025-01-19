@@ -43,7 +43,7 @@ class SignUpController extends GetxController {
       }
     } catch (e) {
       showToast('An unexpected error occurred: ${e.toString()}');
-      print("Error:${e}");
+
     }
     return null;
   }

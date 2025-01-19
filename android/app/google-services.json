@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "314550447841",
+    "project_id": "dine-drop-3b3c2",
+    "storage_bucket": "dine-drop-3b3c2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:314550447841:android:0b32ec88ef347d2fdb51a0",
+        "android_client_info": {
+          "package_name": "com.codexia.dine_drop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFAMPNdCQoZw2QzdHj5aa1Mqyi6QvVw1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

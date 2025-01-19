@@ -4,7 +4,6 @@ import 'package:dine_drop/pages/order_page.dart';
 import 'package:dine_drop/pages/profile_page.dart';
 import 'package:dine_drop/pages/wallet_page.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -14,11 +13,11 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  final List<Widget> pages =const [
-    HomePage(),
-    WalletPage(),
-    OrderPage(),
-    ProfilePage()
+  final List<Widget> pages = [
+    const HomePage(),
+          OrderPage(),
+          WalletPage(),
+     const ProfilePage()
   ];
   int currentIndex = 0;
 
